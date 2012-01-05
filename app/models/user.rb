@@ -41,8 +41,9 @@ class User < ActiveRecord::Base
                     )
     access_token.request(
       :post,
-      'http://api.twitter.com/1/statuses/update.json',
-      status: "よったー)^o^("
+      'http://api.twitter.com/1/statuses/update.xml',
+      "Content-Type" => "application/xml",
+      "status" => "よったー)^o^("
     )
   end
 end
