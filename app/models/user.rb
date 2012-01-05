@@ -28,10 +28,21 @@ class User < ActiveRecord::Base
   end
 
   def tweet
-    consumer = OAuth::Consumer.new ENV['TWITTER_KEY'], ENV['TWITTER_SECRET'],
-                  signature_method: OAuth::SignatureMethod::HMAC::SHA1,
-                  token: OAuth::Token.new(token, secret)
-    consumer.post 'http://api.twitter.com/1/statuses/update.format',
+    consumer = OAuth::Consumer.new(
+                  ENV['TWITTER_KEY'],
+                  ENV['TWITTER_SECRET'],
+                  site: "http://api.twitter.com",
+                  scheme: :header
+                )
+    access_token = OAuth::AccessToken.from_hash(
+                      consumer,
+                      oauth_token: token,
+                      oauth_token_secret: secret
+                    )
+    access_token.request(
+      :post,
+      'http://api.twitter.com/1/statuses/update.json',
       status: "よったー)^o^("
+    )
   end
 end
