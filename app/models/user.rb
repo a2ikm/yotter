@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
 class User < ActiveRecord::Base
+  scope :active, where(active: true)
+
   def self.find_or_create_by_omniauth(auth)
     find_by_omniauth(auth) || create_by_omniauth(auth)
   end
@@ -22,5 +25,13 @@ class User < ActiveRecord::Base
 
   def deactivate
     update_attributes!(active: false)
+  end
+
+  def tweet
+    consumer = OAuth::Consumer.new ENV['TWITTER_KEY'], ENV['TWITTER_SECRET'],
+                  signature_method: OAuth::SignatureMethod::HMAC::SHA1,
+                  token: OAuth::Token.new(token, secret)
+    consumer.post 'http://api.twitter.com/1/statuses/update.format',
+      status: "よったー)^o^("
   end
 end
