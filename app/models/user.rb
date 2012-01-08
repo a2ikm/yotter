@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+require 'pp'
+
 class User < ActiveRecord::Base
   scope :active, where(active: true)
 
@@ -39,11 +42,13 @@ class User < ActiveRecord::Base
                       oauth_token: token,
                       oauth_token_secret: secret
                     )
-    access_token.request(
+    result = access_token.request(
       :post,
       'http://api.twitter.com/1/statuses/update.xml',
       "Content-Type" => "application/xml",
       "status" => "よったー)^o^("
     )
+    Rails.logger.warn result.pretty_inspect
+    result
   end
 end
