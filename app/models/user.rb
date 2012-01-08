@@ -48,7 +48,7 @@ class User < ActiveRecord::Base
       "Content-Type" => "application/xml",
       "status" => "よったー)^o^("
     )
-    Rails.logger.warn result.pretty_inspect
+    Rails.logger.warn result.body.pretty_inspect
     result
   end
 end
