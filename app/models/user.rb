@@ -57,13 +57,11 @@ class User < ActiveRecord::Base
                       oauth_token: token,
                       oauth_token_secret: secret
                     )
-    result = access_token.request(
+    access_token.request(
       :post,
       'http://api.twitter.com/1/statuses/update.xml',
       "Content-Type" => "application/xml",
       "status" => "よったー)^o^("
     )
-    Rails.logger.warn result.body.pretty_inspect
-    result
   end
 end
