@@ -5,8 +5,14 @@ require 'pp'
 class User < ActiveRecord::Base
   scope :active, where(active: true)
 
-  def self.find_or_create_by_omniauth(auth)
-    find_by_omniauth(auth) || create_by_omniauth(auth)
+  def self.update_or_create_by_omniauth(auth)
+    find_and_update_by_omniauth(auth) || create_by_omniauth(auth)
+  end
+
+  def self.find_and_update_by_omniauth(auth)
+    user = find_by_omniauth(auth)
+    user.update_by_omniauth(auth) if user.present?
+    user
   end
 
   def self.find_by_omniauth(auth)
@@ -15,6 +21,15 @@ class User < ActiveRecord::Base
 
   def self.create_by_omniauth(auth)
     create(
+      uid:      auth["uid"],
+      nickname: auth["info"]["nickname"],
+      token:    auth["credentials"]["token"],
+      secret:   auth["credentials"]["secret"]
+    )
+  end
+
+  def update_by_omniauth(auth)
+    update_attributes(
       uid:      auth["uid"],
       nickname: auth["info"]["nickname"],
       token:    auth["credentials"]["token"],
