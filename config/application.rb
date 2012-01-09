@@ -54,4 +54,12 @@ module Yotter
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
   end
+
+  
+  OAUTH_CONSUMER = OAuth::Consumer.new(
+                      ENV['TWITTER_KEY'],
+                      ENV['TWITTER_SECRET'],
+                      site: "http://api.twitter.com",
+                      scheme: :header
+                    )
 end

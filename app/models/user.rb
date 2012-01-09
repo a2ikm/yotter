@@ -45,18 +45,15 @@ class User < ActiveRecord::Base
     update_attributes!(active: false)
   end
 
+  def access_token
+    @access_token ||= OAuth::AccessToken.from_hash(
+                        ::Yotter::OAUTH_CONSUMER,
+                        oauth_token: token,
+                        oauth_token_secret: secret
+                      )
+  end
+
   def tweet
-    consumer = OAuth::Consumer.new(
-                  ENV['TWITTER_KEY'],
-                  ENV['TWITTER_SECRET'],
-                  site: "http://api.twitter.com",
-                  scheme: :header
-                )
-    access_token = OAuth::AccessToken.from_hash(
-                      consumer,
-                      oauth_token: token,
-                      oauth_token_secret: secret
-                    )
     access_token.request(
       :post,
       'http://api.twitter.com/1/statuses/update.xml',
